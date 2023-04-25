@@ -1,17 +1,11 @@
 const std = @import("std");
-const RocList = @import("./src/list.zig").RocList;
+const RocList = @import("list.zig").RocList;
 const builtin = @import("builtin");
 
 comptime {
     if (builtin.target.cpu.arch != .wasm32) {
         @compileError("This platform is for WebAssembly only. You need to pass `--target wasm32` to the Roc compiler.");
     }
-}
-
-pub const RocList = extern struct {
-    bytes: ?[*]u8,
-    length: usize,
-    capacity_or_ref_ptr: usize,
 }
 
 const Align = extern struct { a: usize, b: usize };
