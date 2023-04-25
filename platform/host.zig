@@ -1,5 +1,5 @@
 const std = @import("std");
-const RocList = @import("list.zig").RocList;
+const RocList = @import("src/list.zig").RocList;
 const builtin = @import("builtin");
 
 comptime {
