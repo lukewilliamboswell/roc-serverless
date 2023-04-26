@@ -3,5 +3,4 @@ app "echo"
     imports []
     provides [main] to pf
 
-main = \_ -> 
-    Str.toUtf8 "Goodbye!\n"
+main = "Ahoy there!\n"

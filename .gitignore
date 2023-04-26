@@ -1,3 +1,6 @@
 zig-cache
 *.o
-*.wasm
+.DS_Store
+*.bc
+*.rh
+target

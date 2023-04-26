@@ -1,10 +1,15 @@
 const std = @import("std");
-const RocList = @import("src/list.zig").RocList;
+const RocStr = @import("src/str.zig").RocStr;
 const builtin = @import("builtin");
 
 comptime {
     if (builtin.target.cpu.arch != .wasm32) {
         @compileError("This platform is for WebAssembly only. You need to pass `--target wasm32` to the Roc compiler.");
+    }
+    if (builtin.os.tag == .macos or builtin.os.tag == .linux) {
+        @export(roc_getppid, .{ .name = "roc_getppid", .linkage = .Strong });
+        @export(roc_mmap, .{ .name = "roc_mmap", .linkage = .Strong });
+        @export(roc_shm_open, .{ .name = "roc_shm_open", .linkage = .Strong });
     }
 }
 
@@ -37,27 +42,48 @@ export fn roc_memcpy(dest: *anyopaque, src: *anyopaque, count: usize) callconv(.
     _ = memcpy(dest, src, count);
 }
 
-pub extern fn roc__mainForHost_1_exposed_generic(arg: *RocList, ret: *RocList) void;
+export fn roc_panic(c_ptr: *anyopaque, tag_id: u32) callconv(.C) void {
+    _ = tag_id;
 
-pub fn main() !void {
-
-    const stdout = std.io.getStdOut().writer(); 
-
-    const helloStr = "hello, world!";
-    var arg = RocList.fromSlice(u8, helloStr[0..]);
-    var ret = RocList.empty();
-
-    roc__mainForHost_1_exposed_generic(&arg, &ret);
-
-    const maybeBytes = ret.elements(u8);
-    const bytes = maybeBytes orelse {
-        std.debug.print("Error getting elements\n", .{});
-        std.process.exit(1);
-    };
-
-    const array_len: usize = ret.len();
-    const byteSlice = bytes[0..array_len];
-
-    try stdout.writeAll(byteSlice); // Write the slice to stdout
-
+    const stderr = std.io.getStdErr().writer();
+    const msg = @ptrCast([*:0]const u8, c_ptr);
+    stderr.print("Application crashed with message\n\n    {s}\n\nShutting down\n", .{msg}) catch unreachable;
+    std.process.exit(0);
 }
+
+extern fn roc__mainForHost_1_exposed_generic(*RocStr) void;
+
+pub fn main() u8 {
+
+    var str = RocStr.empty();
+    roc__mainForHost_1_exposed_generic(&str);
+
+    // stdout the result
+    const stdout = std.io.getStdOut().writer(); 
+    stdout.print("{s}", .{str.asSlice()}) catch unreachable;
+
+    return 0;
+}
+
+// WORK IN PROGRESS 
+// ATTEMPTS TO GET `main : Str -> Str` for main working....
+
+// pub extern fn roc__mainForHost_1_exposed_generic(_: *RocStr, _: *RocStr) void;
+
+// pub fn main() u8 {
+    
+//     // Call Roc and get the Str
+//     var arg = RocStr.empty();
+//     var ret = RocStr.empty();
+
+//     roc__mainForHost_1_exposed_generic(&ret, &arg);
+
+//     // Print to stdio
+//     const stdout = std.io.getStdOut().writer(); 
+//     stdout.print("Printing...", .{}) catch unreachable;
+//     stdout.print("{s}", .{ret.asSlice()}) catch unreachable;
+
+//     // value.decref();
+
+//     return 0;
+// }
