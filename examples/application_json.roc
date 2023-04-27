@@ -1,19 +1,27 @@
 app "application_json"
-    packages { 
+    packages {
         pf: "../platform/main.roc",
     }
     imports [
-        Jason.{jsonWithOptions}
+        Jason.{ jsonWithOptions },
     ]
     provides [main] to pf
 
-main = 
+main =
     encoder = jsonWithOptions { fieldNameMapping: PascalCase }
-    
-    exampleRecord
-    |> Encode.toBytes encoder
-    |> Str.fromUtf8
-    |> Result.withDefault "Fatal error encoding json"
+
+    when Encode.toBytes exampleRecord encoder |> Str.fromUtf8 is
+        Ok jsonStr ->
+            [
+                "HTTP/1.1 200 OK\r\n",
+                "Content-Type: application/json; charset=utf-8\r\n",
+                "\r\n",
+                jsonStr,
+            ]
+            |> Str.joinWith ""
+
+        Err _ ->
+            "HTTP/1.1 500 Internal Server Error\r\n"
 
 exampleRecord = {
     image: {
