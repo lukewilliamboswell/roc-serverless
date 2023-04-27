@@ -2,14 +2,15 @@
 
 Work In Progress - A platform to build serverless functions using Roc.
 
-## Step 1 - Work Around compiler bug
+```sh
+# From roc repository (unitl [#5333](https://github.com/roc-lang/roc/pull/5333) is merged)
+cargo run -- build --target wasm32 ../roc-serverless/examples/echo.roc
 
-Change `"i386-linux-musl"` to `"wasm32-wasi"` on line 373 in `crates/compiler/build/src/link.rs`
+# Run example locally
+wasmer run examples/echo.wasm
+```
 
-## Step 2 - Build using Roc cli
+## Future work
 
-From Roc repository use `% cargo run -- build --target wasm32 ../roc-serverless/examples/echo.roc` to build the WASM file.
-
-## Step 3 - Run using a WASM runtime
-
-`% wasmer run examples/echo.wasm`
+- [x] Minimal example compiled to WASI
+- [ ] Support I/O using `Content-type: application/json; charset=utf-8` 

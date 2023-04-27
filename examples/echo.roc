@@ -1,6 +1,9 @@
 app "echo"
-    packages { pf: "../platform/main.roc" }
+    packages { 
+        pf: "../platform/main.roc",
+    }
     imports []
     provides [main] to pf
 
-main = "Ahoy there!\n"
+# TODO make this an ECHO server when platform is updated
+main = "Ahoy there!"
