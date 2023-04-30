@@ -33,10 +33,14 @@ npx wrangler@wasm login
 npx wrangler@wasm publish --name application-json --compatibility-date 2023-03-28 examples/application_json.wasm
 
 # Test worker
- % curl -X POST https://application-json.[YOUR WORKER SUBDOMAIN].workers.dev
+% curl -X POST https://application-json.[YOUR WORKER SUBDOMAIN].workers.dev
 HTTP/1.1 200 OK
 Content-Type: application/json; charset=utf-8
 
 {"Image":{"Animated":false,"Height":600,"Ids":[116,943,234,38793],"Thumbnail":{"Height":125,"Url":"http:\/\/www.example.com\/image\/481989943","Width":100},"Title":"View from 15th Floor","Width":800}}%  
 ```
 
+## STUFF
+
+`nm -g platform/main.o`
+<!-- `otool -tV platform/main.o` platform/main.o: is not an object file -->

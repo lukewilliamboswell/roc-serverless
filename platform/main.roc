@@ -1,9 +1,9 @@
 platform "serverless"
-    requires {} { main : Str }
+    requires {} { main : Str -> Str }
     exposes []
     packages {}
     imports []
     provides [mainForHost]
 
-mainForHost : Str
+mainForHost : Str -> Str
 mainForHost = main

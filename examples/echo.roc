@@ -6,4 +6,6 @@ app "echo"
     provides [main] to pf
 
 # TODO make this an ECHO server when platform is updated
-main = "Ahoy there!"
+main : Str -> Str
+main = \_ -> "Hello"
+

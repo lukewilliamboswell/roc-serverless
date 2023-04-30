@@ -1,5 +1,5 @@
 const std = @import("std");
-const RocStr = @import("src/str.zig").RocStr;
+const RocStr = @import("glue").str.RocStr;
 const builtin = @import("builtin");
 
 comptime {
@@ -51,39 +51,21 @@ export fn roc_panic(c_ptr: *anyopaque, tag_id: u32) callconv(.C) void {
     std.process.exit(0);
 }
 
-extern fn roc__mainForHost_1_exposed_generic(*RocStr) void;
+extern fn roc__mainForHost_1_exposed_generic(_: *RocStr, _: RocStr) void;
 
 pub fn main() u8 {
 
-    var str = RocStr.empty();
-    roc__mainForHost_1_exposed_generic(&str);
+    // Allocate some memory
+    var ret_str: [3]u8 = "abc".*;
+    var ret = RocStr.init(&ret_str, 3);
 
-    // stdout the result
-    const stdout = std.io.getStdOut().writer(); 
-    stdout.print("{s}", .{str.asSlice()}) catch unreachable;
+    // Call Roc and get the Str
+    roc__mainForHost_1_exposed_generic(&ret, ret);
+
+    // Print to stdio
+    const stdout = std.io.getStdOut().writer();
+    stdout.print("Printing...", .{}) catch unreachable;
+    stdout.print("{s}", .{ret.asSlice()}) catch unreachable;
 
     return 0;
 }
-
-// WORK IN PROGRESS 
-// ATTEMPTS TO GET `main : Str -> Str` for main working....
-
-// pub extern fn roc__mainForHost_1_exposed_generic(_: *RocStr, _: *RocStr) void;
-
-// pub fn main() u8 {
-    
-//     // Call Roc and get the Str
-//     var arg = RocStr.empty();
-//     var ret = RocStr.empty();
-
-//     roc__mainForHost_1_exposed_generic(&ret, &arg);
-
-//     // Print to stdio
-//     const stdout = std.io.getStdOut().writer(); 
-//     stdout.print("Printing...", .{}) catch unreachable;
-//     stdout.print("{s}", .{ret.asSlice()}) catch unreachable;
-
-//     // value.decref();
-
-//     return 0;
-// }
