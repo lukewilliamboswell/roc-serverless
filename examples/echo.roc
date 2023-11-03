@@ -1,11 +1,14 @@
 app "echo"
-    packages { 
+    packages {
         pf: "../platform/main.roc",
     }
     imports []
     provides [main] to pf
 
-# TODO make this an ECHO server when platform is updated
 main : Str -> Str
-main = \_ -> "Hello"
+main = \s ->
+    if s == "MARCO" then
+        "POLO"
+    else
+        s
 
