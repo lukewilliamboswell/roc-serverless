@@ -1,6 +1,5 @@
 zig-cache
-*.o
 .DS_Store
 *.bc
+*.o
 *.rh
-target
