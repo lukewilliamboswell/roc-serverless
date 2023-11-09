@@ -2,23 +2,10 @@
 
 Experimental platform to build serverless functions using Roc.
 
-STATUS: Broken with the below (last checked 3 Nov 2023)
+
 ```
-roc-serverless % ../roc/target/release/roc build --target=wasm32 examples/echo.roc
-🔨 Rebuilding platform...
-LLD Link... warning(link): unexpected LLD stderr:
-wasm-ld: warning: function signature mismatch: roc__mainForHost_1_exposed_generic
->>> defined as (i32, i32) -> void in lto.tmp
->>> defined as (i32) -> void in /Users/luke/.cache/zig/o/5eb3226a47634949bbbffa03abc90140/roc_app5xoOZH.o
-
-0 errors and 0 warnings found in 440 ms while successfully building:
-
-    examples/echo.wasm
-luke@192-168-1-105 roc-serverless % wasmer run examples/echo.wasm                            
-error: failed to run `examples/echo.wasm`
-│   1: RuntimeError: unreachable
-╰─▶ 2: unreachable
-
+roc build --target=wasm32 examples/echo.roc
+wasmer run examples/echo.wasm
 ```
 
 ## CloudFare Notes

@@ -90,7 +90,7 @@ comptime {
     }
 }
 
-extern fn roc__mainForHost_1_exposed_generic(*RocStr, RocStr) void;
+extern fn roc__mainForHost_1_exposed_generic(*RocStr, *RocStr) void;
 
 pub fn main() u8 {
     var arg = RocStr.fromSlice("MARCO");
@@ -99,7 +99,7 @@ pub fn main() u8 {
     var callresult = RocStr.fromSlice("OUT");
     defer callresult.decref();
 
-    roc__mainForHost_1_exposed_generic(&callresult, arg);
+    roc__mainForHost_1_exposed_generic(&callresult, &arg);
 
     std.debug.print("IN {s}\n", .{arg.asSlice()});
     std.debug.print("OUT {s}\n", .{callresult.asSlice()});

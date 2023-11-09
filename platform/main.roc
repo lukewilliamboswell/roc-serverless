@@ -6,4 +6,4 @@ platform "serverless"
     provides [mainForHost]
 
 mainForHost : Str -> Str
-mainForHost = main
+mainForHost = \str -> main str
