@@ -6,7 +6,7 @@ app "echo"
     provides [main] to pf
 
 main : Str -> Str
-main = \s ->
+main = \s -> 
     if s == "MARCO" then
         "POLO"
     else

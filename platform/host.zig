@@ -90,25 +90,19 @@ comptime {
     }
 }
 
-const mem = std.mem;
-const Allocator = mem.Allocator;
-
-extern fn roc__mainForHost_1_exposed_generic(*RocStr, *RocStr) void;
+extern fn roc__mainForHost_1_exposed_generic(*RocStr, RocStr) void;
 
 pub fn main() u8 {
-    const arg = RocStr.fromSlice("MARCO");
-    const callresult = callRoc(arg);
+    var arg = RocStr.fromSlice("MARCO");
+    defer arg.decref();
+
+    var callresult = RocStr.fromSlice("OUT");
     defer callresult.decref();
 
-    std.debug.print("Got {s}\n", .{callresult.asSlice()});
+    roc__mainForHost_1_exposed_generic(&callresult, arg);
+
+    std.debug.print("IN {s}\n", .{arg.asSlice()});
+    std.debug.print("OUT {s}\n", .{callresult.asSlice()});
 
     return 0;
-}
-
-fn callRoc(arg: RocStr) RocStr {
-    var callresult = RocStr.empty();
-    roc__mainForHost_1_exposed_generic(&callresult, @constCast(&arg));
-    arg.decref();
-
-    return callresult;
 }
